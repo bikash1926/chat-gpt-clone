@@ -89,9 +89,6 @@ async function loginController(req, res) {
   }
 }
 
-
-
-
 async function logoutController(req, res) {
   try {
     res.clearCookie("token");
