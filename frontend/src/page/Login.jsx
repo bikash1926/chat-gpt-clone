@@ -20,7 +20,7 @@ const Login = () => {
         setSubmitting(true);
 
         try {
-            const res = await axios.post("http://localhost:3000/auth/login", {
+            const res = await axios.post("https://chat-gpt-clone-vdwd.onrender.com/auth/login", {
                 email: form.email,
                 password: form.password
             }, {

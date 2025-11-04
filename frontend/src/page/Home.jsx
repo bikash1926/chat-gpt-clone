@@ -41,7 +41,7 @@ const Home = () => {
       if (title) title = title.trim();
       if (!title) return alert("Chat title cannot be empty!");
 
-      const response = await axios.post("http://localhost:3000/api/chat/", {
+      const response = await axios.post("https://chat-gpt-clone-vdwd.onrender.com/api/chat/", {
         title
       }, { withCredentials: true });
 
@@ -58,7 +58,7 @@ const Home = () => {
   const handleLogout = async () => {
     try {
       // 1. Tell the backend to log out
-      await axios.post("http://localhost:3000/api/auth/logout", {}, { withCredentials: true });
+      await axios.post("https://chat-gpt-clone-vdwd.onrender.com/api/auth/logout", {}, { withCredentials: true });
       // 2. Clear user data from the Redux store
       dispatch(logout());
       // 3. Redirect to the login page
@@ -73,7 +73,7 @@ const Home = () => {
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/chat/", {
+        const response = await axios.get("https://chat-gpt-clone-vdwd.onrender.com/api/chat/", {
           withCredentials: true
         });
         dispatch(setChats(response.data.chats.reverse()));
@@ -84,7 +84,7 @@ const Home = () => {
 
     const fetchUser = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/auth/me", {
+        const response = await axios.get("https://chat-gpt-clone-vdwd.onrender.com/auth/me", {
           withCredentials: true,
         });
         // Dispatch the action to save the user in the Redux store
@@ -99,7 +99,7 @@ const Home = () => {
     fetchUser();
     fetchChats();
 
-    const tempSocket = io("http://localhost:3000", { withCredentials: true });
+    const tempSocket = io("https://chat-gpt-clone-vdwd.onrender.com", { withCredentials: true });
 
     tempSocket.on("ai-response", (messagePayload) => {
       console.log("Received AI response:", messagePayload);
@@ -143,7 +143,7 @@ const Home = () => {
   const getMessages = async (chatId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/chat/messages/${chatId}`,
+        `https://chat-gpt-clone-vdwd.onrender.com/api/chat/messages/${chatId}`,
         { withCredentials: true }
       );
 

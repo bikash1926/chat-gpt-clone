@@ -18,7 +18,7 @@ const Register = () => {
         setSubmitting(true);
         console.log(form);
 
-        axios.post("http://localhost:3000/auth/register", {
+        axios.post("https://chat-gpt-clone-vdwd.onrender.com/auth/register", {
             email: form.email,
             fullname: {
                 firstname: form.firstname,
