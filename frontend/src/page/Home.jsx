@@ -82,21 +82,6 @@ const Home = () => {
       }
     };
 
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get("https://chat-gpt-clone-vdwd.onrender.com/auth/me", {
-          withCredentials: true,
-        });
-        // Dispatch the action to save the user in the Redux store
-        dispatch(setUser(response.data.user));
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        // If it fails, the user is not logged in, so redirect
-        navigate('/login');
-      }
-    };
-
-    fetchUser();
     fetchChats();
 
     const tempSocket = io("https://chat-gpt-clone-vdwd.onrender.com", { withCredentials: true });
@@ -117,7 +102,7 @@ const Home = () => {
       tempSocket.disconnect();
       console.log("Socket disconnected");
     };
-  }, [dispatch, navigate]);
+  }, [dispatch]);
 
   // ✅ Send message to server
   const sendMessage = async () => {
