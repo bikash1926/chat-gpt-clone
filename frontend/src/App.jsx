@@ -1,34 +1,52 @@
 import React, { useEffect } from 'react';
-import MainRoute from "./MainRoute";
-import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { setUser, setAuthStatus } from './store/userSlice.js';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { setUser, setAuthStatus } from './store/userSlice';
+
+import Home from './page/Home';
+import Login from './page/Login';
+import Register from './page/Register';
+import ProtectedRoute from './components/ProtectedRoute';
+import './App.css';
 
 const App = () => {
   const dispatch = useDispatch();
-  const { status } = useSelector(state => state.user);
+  const { status } = useSelector((state) => state.user);
 
   useEffect(() => {
-    dispatch(setAuthStatus('loading'));
-    axios.get('https://chat-gpt-clone-vdwd.onrender.com/api/auth/me', { withCredentials: true })
-      .then(res => {
-        dispatch(setUser(res.data.user));
-      })
-      .catch(() => {
-        dispatch(setAuthStatus('failed'));
-      });
+    const checkAuth = async () => {
+      dispatch(setAuthStatus('loading'));
+      try {
+        const { data } = await axios.get('/api/auth/me');
+        dispatch(setUser(data));
+      } catch (error) {
+        dispatch(setUser(null));
+      }
+    };
+    checkAuth();
   }, [dispatch]);
 
-  if (status === 'loading') {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading...</div>;
+  if (status === 'loading' || status === 'idle') {
+    return null;
   }
 
   return (
-    <div>
-      <MainRoute />
-    </div>
-  )
-}
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 export default App;
