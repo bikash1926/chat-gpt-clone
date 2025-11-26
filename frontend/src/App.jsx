@@ -15,20 +15,38 @@ const App = () => {
   const { status } = useSelector((state) => state.user);
 
   useEffect(() => {
+    // Ensure all requests use the same backend and include cookies
+    axios.defaults.baseURL = 'https://chat-gpt-clone-vdwd.onrender.com';
+    axios.defaults.withCredentials = true;
+
     const checkAuth = async () => {
       dispatch(setAuthStatus('loading'));
       try {
-        const { data } = await axios.get('/api/auth/me');
-        dispatch(setUser(data));
+        const { data } = await axios.get('/auth/me');
+        // Expect shape { user: {...} } from backend
+        dispatch(setUser(data.user || null));
       } catch (error) {
-        dispatch(setUser(null));
+        // Do NOT immediately clear user on network/CORS errors to avoid logout flicker
+        // Just mark status failed; ProtectedRoute will keep user if already set
+        dispatch(setAuthStatus('failed'));
       }
     };
     checkAuth();
   }, [dispatch]);
 
-  if (status === 'loading' || status === 'idle') {
-    return null;
+  if (status === 'loading') {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        Loading...
+      </div>
+    );
   }
 
   return (
